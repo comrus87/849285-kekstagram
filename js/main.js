@@ -1,44 +1,61 @@
 'use strict';
 
-var minPicture = 1;
-var maxPicture = 25;
 var minLikes = 15;
 var maxLikes = 200;
+var MIN_COMMENTS =5;
+var MAX_COMMENTS =10;
 var messages = ['Всё отлично!', 'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 
+var descriptions = [
+  'Тестим новую камеру!',
+  'Затусили с друзьями на море',
+  'Как же круто тут кормят',
+  'Отдыхаем...',
+  'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
+  'Вот это тачка!'
+];
+
 var arrayName = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
 
-// Находим случайное значение для фото и лайков
+// Находим случайное значение
 var getRandomNumber = function (min, max) {
-  return Math.random() * (max - min) + min;
-};
-
-var randomPicture = Math.floor(getRandomNumber(minPicture, maxPicture));
-var randomNumberLikes = Math.floor(getRandomNumber(minLikes, maxLikes));
-
-// Находим  случайное значение для сообщений и имени
-var randomMessage = Math.floor(Math.random() * messages.length);
-var randomName = Math.floor(Math.random() * arrayName.length);
-
-// создаем объект
-var objectComments = {
-  avatar: 'img/avatar-' + Math.floor(getRandomNumber(0, 6)) + '.svg',
-  message: messages[randomMessage],
-  name: arrayName[randomName]
+  return Math.floor(Math.random() * (max - min) + min);
 };
 
 
-var photo = {
-  url: 'photos/' + randomPicture + '.jpg',
-  likes: randomNumberLikes,
-  comments: objectComments
+var getRandomArray = function (array) {
+  var rand = Math.random() * array.length;
+  rand = Math.floor(rand);
+  return array[rand];
 };
 
 
-// for (var i = 0; i < 25; i++) {
+var getComments = function () {
+  var objectComments = {};
+  var commentsNumbe = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
+  for (var i = 0; i < commentsNumbe; i++) {
+    objectComments[i] = {
+      avatar: 'img/avatar-' + (getRandomNumber(0, 6)) + '.svg',
+      message: getRandomArray(messages),
+      name: getRandomArray(arrayName)
+    };
+  return objectComments;
+};
 
-// }
+
+var photo = {};
+
+for (var i = 0; i < 25; i++) {
+  photo[i] = {
+    url: 'photos/' + i + '.jpg',
+    likes: getRandomNumber(minLikes, maxLikes),
+    comments: getComments(),
+    descriptions: getRandomArray(descriptions)
+  };
+}
+
+console.log(photo);
