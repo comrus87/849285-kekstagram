@@ -2,8 +2,8 @@
 
 var minLikes = 15;
 var maxLikes = 200;
-var MIN_COMMENTS =5;
-var MAX_COMMENTS =10;
+var MIN_COMMENTS = 5;
+var MAX_COMMENTS = 10;
 var messages = ['Всё отлично!', 'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
@@ -35,22 +35,22 @@ var getRandomArray = function (array) {
 
 
 var getComments = function () {
-  var objectComments = {};
+  var comments = [];
   var commentsNumbe = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
   for (var i = 0; i < commentsNumbe; i++) {
-    objectComments[i] = {
+    comments[i] = {
       avatar: 'img/avatar-' + (getRandomNumber(0, 6)) + '.svg',
       message: getRandomArray(messages),
       name: getRandomArray(arrayName)
     };
-  return objectComments;
+  }
+  return comments;
 };
 
-
-var photo = {};
+var photos = [];
 
 for (var i = 0; i < 25; i++) {
-  photo[i] = {
+  photos[i] = {
     url: 'photos/' + i + '.jpg',
     likes: getRandomNumber(minLikes, maxLikes),
     comments: getComments(),
@@ -58,4 +58,19 @@ for (var i = 0; i < 25; i++) {
   };
 }
 
-console.log(photo);
+// Начинаем работать с DOM-деревом
+var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+
+var renderPhoto = function () {
+  var photoElement = photoTemplate.cloneNode(true);
+  photoElement.querySelector('.picture__img').src = photos[i].url;
+  photoElement.querySelector('.picture__likes').textContent = photos[i].likes;
+  photoElement.querySelector('.picture__comments').textContent = photos[i].comments;
+  return photoElement;
+};
+// for (var k = 0; k < photos.length; k++) {
+
+// var fragment = document.createDocumentFragment();
+
+
