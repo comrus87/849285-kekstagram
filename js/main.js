@@ -34,13 +34,12 @@ var getRandomArray = function (array) {
   return array[rand];
 };
 
-
+var comments = [];
 var getComments = function () {
-  var comments = [];
   var commentsNumbe = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
   for (var i = 0; i < commentsNumbe; i++) {
     comments[i] = {
-      avatar: 'img/avatar-' + (getRandomNumber(0, 6)) + '.svg',
+      avatar: 'img/avatar-' + (getRandomNumber(1, 6)) + '.svg',
       message: getRandomArray(messages),
       name: getRandomArray(arrayName)
     };
@@ -85,3 +84,46 @@ var renderAllPhoto = function () {
   photoContainer.appendChild(fragment);
 };
 
+renderAllPhoto();
+
+var bigPicture = document.querySelector('.big-picture');
+bigPicture.classList.remove('hidden');
+
+var socialComments = document.querySelector('.social__comments');
+
+var renderComment = function (comment) {
+  var commentElement = socialComments.cloneNode(true);
+  commentElement.querySelector('.social__picture').src = comment.avatar;
+  commentElement.querySelector('.social__text').textContent = comment.message;
+  return commentElement;
+};
+
+var renderAllComments = function () {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < comments.length; i++) {
+    fragment.appendChild(renderComment(comments[i]));
+  }
+  socialComments.appendChild(fragment);
+};
+
+renderAllComments();
+
+var renderBigPicture = function (picture) {
+  var bigElement = bigPicture.cloneNode(true);
+  bigElement.querySelector('.big-picture__img').src = picture.url;
+  bigElement.querySelector('.likes-count').textContent = picture.likes;
+  bigElement.querySelector('.comments-count').textContent = picture.comments.length;
+  bigElement.querySelector('.social__caption').textContent = picture.descriptions;
+  return bigElement;
+};
+
+var renderFirstBigPicture = function () {
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(renderBigPicture(photos[0]));
+  bigPicture.appendChild(fragment);
+};
+
+renderFirstBigPicture();
+
+document.querySelector('.social__comment-count').classList.add('visually-hidden');
+document.querySelector('.comments-loader').classList.add('visually-hidden');
