@@ -69,8 +69,10 @@ var renderPhoto = function () {
   photoElement.querySelector('.picture__comments').textContent = photos[i].comments;
   return photoElement;
 };
-// for (var k = 0; k < photos.length; k++) {
 
-// var fragment = document.createDocumentFragment();
+var fragment = document.createDocumentFragment();
+for (var k = 0; i < photos.length; k++) {
+  fragment.appendChild(renderPhoto(photos[i]));
+}
 
-
+photoTemplate.appendChild(fragment);
