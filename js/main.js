@@ -4,6 +4,7 @@ var minLikes = 15;
 var maxLikes = 200;
 var MIN_COMMENTS = 5;
 var MAX_COMMENTS = 10;
+var MAX_COUNT = 25;
 var messages = ['Всё отлично!', 'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
@@ -47,32 +48,40 @@ var getComments = function () {
   return comments;
 };
 
-var photos = [];
 
-for (var i = 0; i < 25; i++) {
-  photos[i] = {
-    url: 'photos/' + i + '.jpg',
-    likes: getRandomNumber(minLikes, maxLikes),
-    comments: getComments(),
-    descriptions: getRandomArray(descriptions)
-  };
-}
+var generationPhotos = function (count) {
+  var arrPhotos = [];
+  for (var i = 0; i < count; i++) {
+    arrPhotos[i] = {
+      url: 'photos/' + (i + 1) + '.jpg',
+      likes: getRandomNumber(minLikes, maxLikes),
+      comments: getComments(),
+      descriptions: getRandomArray(descriptions)
+    };
+  }
+  return arrPhotos;
+};
+
+var photos = generationPhotos(MAX_COUNT);
 
 // Начинаем работать с DOM-деревом
 var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
+var photoContainer = document.querySelector('.pictures');
 
 
-var renderPhoto = function () {
+var renderPhoto = function (photo) {
   var photoElement = photoTemplate.cloneNode(true);
-  photoElement.querySelector('.picture__img').src = photos[i].url;
-  photoElement.querySelector('.picture__likes').textContent = photos[i].likes;
-  photoElement.querySelector('.picture__comments').textContent = photos[i].comments;
+  photoElement.querySelector('.picture__img').src = photo.url;
+  photoElement.querySelector('.picture__likes').textContent = photo.likes;
+  photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
   return photoElement;
 };
 
-var fragment = document.createDocumentFragment();
-for (var k = 0; i < photos.length; k++) {
-  fragment.appendChild(renderPhoto(photos[i]));
-}
+var renderAllPhoto = function () {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < photos.length; i++) {
+    fragment.appendChild(renderPhoto(photos[i]));
+  }
+  photoContainer.appendChild(fragment);
+};
 
-photoTemplate.appendChild(fragment);
