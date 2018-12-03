@@ -1,7 +1,7 @@
 'use strict';
 
-var minLikes = 15;
-var maxLikes = 200;
+var MIN_LIKES = 15;
+var MAX_LIKES = 200;
 var MIN_COMMENTS = 5;
 var MAX_COMMENTS = 10;
 var MAX_COUNT = 25;
@@ -20,49 +20,48 @@ var descriptions = [
   'Вот это тачка!'
 ];
 
-var arrayName = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
+var names = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
 
 // Находим случайное значение
 var getRandomNumber = function (min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return Math.round(Math.random() * (max - min) + min);
 };
 
 
-var getRandomArray = function (array) {
-  var rand = Math.random() * array.length;
-  rand = Math.floor(rand);
-  return array[rand];
+var getRandomElement = function (elements) {
+  var rand = Math.round(Math.random() * elements.length);
+  return elements[rand];
 };
 
 
 var getComments = function () {
   var comments = [];
-  var commentsNumbe = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
-  for (var i = 0; i < commentsNumbe; i++) {
+  var commentsNumber = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
+  for (var i = 0; i < commentsNumber; i++) {
     comments[i] = {
       avatar: 'img/avatar-' + (getRandomNumber(1, 6)) + '.svg',
-      message: getRandomArray(messages),
-      name: getRandomArray(arrayName)
+      message: getRandomElement(messages),
+      name: getRandomElement(names)
     };
   }
   return comments;
 };
 
 
-var generationPhotos = function (count) {
+var generatePhotos = function (count) {
   var arrPhotos = [];
   for (var i = 0; i < count; i++) {
     arrPhotos[i] = {
       url: 'photos/' + (i + 1) + '.jpg',
-      likes: getRandomNumber(minLikes, maxLikes),
+      likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
       comments: getComments(),
-      descriptions: getRandomArray(descriptions)
+      descriptions: getRandomElement(descriptions)
     };
   }
   return arrPhotos;
 };
 
-var photos = generationPhotos(MAX_COUNT);
+var photos = generatePhotos(MAX_COUNT);
 
 // Начинаем работать с DOM-деревом
 var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -110,7 +109,7 @@ var renderAllComments = function (comments) {
 };
 
 var renderBigPicture = function (picture) {
-  bigPicture.querySelector('.big-picture__img').querySelector('img').src = picture.url;
+  bigPicture.querySelector('.big-picture__img img').src = picture.url;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
   bigPicture.querySelector('.social__caption').textContent = picture.descriptions;
@@ -119,7 +118,11 @@ var renderBigPicture = function (picture) {
 
 renderBigPicture(photos[0]);
 
-
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
+
+var templateListComment = document.querySelector('.social__comments');
+var templateComment = document.querySelectorAll('.social__comment');
+templateListComment.removeChild(templateComment[0]);
+templateListComment.removeChild(templateComment[1]);
