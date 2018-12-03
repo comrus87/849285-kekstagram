@@ -29,7 +29,7 @@ var getRandomNumber = function (min, max) {
 
 
 var getRandomElement = function (elements) {
-  var rand = Math.round(Math.random() * elements.length);
+  var rand = Math.floor(Math.random() * elements.length);
   return elements[rand];
 };
 
