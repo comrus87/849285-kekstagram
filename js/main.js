@@ -22,6 +22,9 @@ var descriptions = [
 
 var names = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
 
+var ESC_KEYCODE = 27;
+// var ENTER_KEYCODE = 13;
+
 // Находим случайное значение
 var getRandomNumber = function (min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -67,7 +70,6 @@ var photos = generatePhotos(MAX_COUNT);
 var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var photoContainer = document.querySelector('.pictures');
 
-
 var renderPhoto = function (photo) {
   var photoElement = photoTemplate.cloneNode(true);
   photoElement.querySelector('.picture__img').src = photo.url;
@@ -87,7 +89,6 @@ var renderAllPhoto = function () {
 renderAllPhoto();
 
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
 
 var socialComments = document.querySelector('.social__comments');
 var socialItemComments = document.querySelector('.social__comment');
@@ -101,6 +102,7 @@ var renderComment = function (comment) {
 };
 
 var renderAllComments = function (comments) {
+  socialComments.innerHTML = '';
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < comments.length; i++) {
     fragment.appendChild(renderComment(comments[i]));
@@ -116,8 +118,6 @@ var renderBigPicture = function (picture) {
   renderAllComments(picture.comments);
 };
 
-renderBigPicture(photos[0]);
-
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
@@ -126,3 +126,75 @@ var templateListComment = document.querySelector('.social__comments');
 var templateComment = document.querySelectorAll('.social__comment');
 templateListComment.removeChild(templateComment[0]);
 templateListComment.removeChild(templateComment[1]);
+
+var cancelBigPicture = document.querySelector('.big-picture__cancel');
+var thumbnails = document.querySelectorAll('.picture__img');
+var body = document.querySelector('body');
+
+var onEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeBigPicture();
+    closeUploadFile();
+  }
+};
+
+var openBigPicture = function (i, photo) {
+  thumbnails[i].addEventListener('click', function () {
+    bigPicture.classList.remove('hidden');
+    renderBigPicture(photo);
+    body.classList.add('modal-open');
+    document.addEventListener('keydown', onEscPress);
+  });
+};
+
+var renderAllBigPicture = function () {
+  for (var i = 0; i < thumbnails.length; i++) {
+    openBigPicture(i, photos[i]);
+  }
+};
+
+renderAllBigPicture();
+
+var closeBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onEscPress);
+};
+
+cancelBigPicture.addEventListener('click', function () {
+  closeBigPicture();
+});
+
+// ЗАГРУЗАКА ИЗОБРАЖЕНИЯ
+var uploadFile = document.querySelector('#upload-file');
+var uploadImage = document.querySelector('.img-upload__overlay');
+var cancelUploadFile = document.querySelector('.img-upload__cancel');
+
+
+uploadFile.addEventListener('change', function () {
+  uploadImage.classList.remove('hidden');
+  body.classList.add('modal-open');
+  document.addEventListener('keydown', onEscPress);
+});
+
+var closeUploadFile = function () {
+  uploadImage.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onEscPress);
+  uploadFile.value = '';
+};
+
+cancelUploadFile.addEventListener('click', function () {
+  closeUploadFile();
+});
+
+// НАЛОЖЕНИЕ ЭФФЕКТОВ НА ИЗОБРАЖЕНИЕ
+
+var imgPreview = document.querySelector('.img-upload__preview img');
+var buttonsEffectsList = document.querySelector('.effects__list');
+
+// ПРИСВАИВАЕМ ГЛАВНОЙ ФОТО КЛАССЫ ЧЕКНУТЫХ РАДИОБАТОНОВ
+buttonsEffectsList.addEventListener('change', function () {
+  var filterChecked = buttonsEffectsList.querySelector('input:checked');
+  imgPreview.className = 'effects__preview--' + filterChecked.value;
+});
