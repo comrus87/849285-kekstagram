@@ -23,7 +23,7 @@ var descriptions = [
 var names = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
 
 var ESC_KEYCODE = 27;
-// var ENTER_KEYCODE = 13;
+var ENTER_KEYCODE = 13;
 
 // Находим случайное значение
 var getRandomNumber = function (min, max) {
@@ -138,6 +138,12 @@ var onEscPress = function (evt) {
   }
 };
 
+// var onEnterPress = function (evt) {
+//   if (evt.keyCode === ENTER_KEYCODE) {
+//     openBigPicture();
+//   }
+// };
+
 var openBigPicture = function (i, photo) {
   thumbnails[i].addEventListener('click', function () {
     bigPicture.classList.remove('hidden');
@@ -193,8 +199,57 @@ cancelUploadFile.addEventListener('click', function () {
 var imgPreview = document.querySelector('.img-upload__preview img');
 var buttonsEffectsList = document.querySelector('.effects__list');
 
-// ПРИСВАИВАЕМ ГЛАВНОЙ ФОТО КЛАССЫ ЧЕКНУТЫХ РАДИОБАТОНОВ
-buttonsEffectsList.addEventListener('change', function () {
-  var filterChecked = buttonsEffectsList.querySelector('input:checked');
-  imgPreview.className = 'effects__preview--' + filterChecked.value;
+var pinEffectLevel = document.querySelector('.effect-level__pin');
+var effectLine = document.querySelector('.effect-level__line');
+var filterChecked = document.querySelector('.effects__list input:checked');
+
+var effect = {
+  none: {
+    filter: 'none',
+  },
+  chrome: {
+    filter: 'grayscale',
+    MIN_VALUE: 0,
+    MAX_VALUE: 1,
+    unit: ''
+  },
+  sepia: {
+    filter: 'sepia',
+    MIN_VALUE: 0,
+    MAX_VALUE: 1,
+    unit: ''
+  },
+  marvin: {
+    filter: 'invert',
+    MIN_VALUE: 0,
+    MAX_VALUE: 100,
+    unit: '%'
+  },
+  phobos: {
+    filter: 'blur',
+    MIN_VALUE: 0,
+    MAX_VALUE: 3,
+    unit: 'px'
+  },
+  heat: {
+    filter: 'brightness',
+    MIN_VALUE: 1,
+    MAX_VALUE: 3,
+    unit: ''
+  }
+};
+
+pinEffectLevel.addEventListener('mouseup', function () {
+  var relationLevelDepth = Math.round(pinEffectLevel.offsetLeft * 100 / effectLine.clientWidth);
+  var percentDepth = effect[filterChecked.value].MAX_VALUE * relationLevelDepth / 100;
+  imgPreview.style.filter = effect[filterChecked.value].filter + '(' + percentDepth + effect[filterChecked.value].unit + ')';
+});
+
+buttonsEffectsList.addEventListener('change', function (evt) {
+  if (filterChecked) {
+    imgPreview.classList.remove('effects__preview--' + filterChecked.value);
+  }
+  imgPreview.classList.add('effects__preview--' + evt.target.value);
+  filterChecked = evt.target;
+  imgPreview.style.filter = effect[filterChecked.value].filter + '(' + effect[filterChecked.value].MIN_VALUE + effect[filterChecked.value].unit + ')';
 });
