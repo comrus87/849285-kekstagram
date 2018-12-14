@@ -23,7 +23,7 @@ var descriptions = [
 var names = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
 
 var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
+// var ENTER_KEYCODE = 13;
 
 // Находим случайное значение
 var getRandomNumber = function (min, max) {
@@ -128,7 +128,7 @@ templateListComment.removeChild(templateComment[0]);
 templateListComment.removeChild(templateComment[1]);
 
 var cancelBigPicture = document.querySelector('.big-picture__cancel');
-var thumbnails = document.querySelectorAll('.picture__img');
+var thumbnails = document.querySelectorAll('.picture');
 var body = document.querySelector('body');
 
 var onEscPress = function (evt) {
@@ -138,13 +138,7 @@ var onEscPress = function (evt) {
   }
 };
 
-// var onEnterPress = function (evt) {
-//   if (evt.keyCode === ENTER_KEYCODE) {
-//     openBigPicture();
-//   }
-// };
-
-var openBigPicture = function (i, photo) {
+var addThumbnailListener = function (i, photo) {
   thumbnails[i].addEventListener('click', function () {
     bigPicture.classList.remove('hidden');
     renderBigPicture(photo);
@@ -155,7 +149,7 @@ var openBigPicture = function (i, photo) {
 
 var renderAllBigPicture = function () {
   for (var i = 0; i < thumbnails.length; i++) {
-    openBigPicture(i, photos[i]);
+    addThumbnailListener(i, photos[i]);
   }
 };
 
@@ -202,6 +196,7 @@ var buttonsEffectsList = document.querySelector('.effects__list');
 var pinEffectLevel = document.querySelector('.effect-level__pin');
 var effectLine = document.querySelector('.effect-level__line');
 var filterChecked = document.querySelector('.effects__list input:checked');
+var effectLevel = document.querySelector('.effect-level');
 
 var effect = {
   none: {
@@ -239,10 +234,16 @@ var effect = {
   }
 };
 
+var setFilterValue = function (value) {
+  imgPreview.style.filter = effect[filterChecked.value].filter + '(' + value + effect[filterChecked.value].unit + ')';
+};
+
 pinEffectLevel.addEventListener('mouseup', function () {
+  // находим текущее положение пина в процентах
   var relationLevelDepth = Math.round(pinEffectLevel.offsetLeft * 100 / effectLine.clientWidth);
-  var percentDepth = effect[filterChecked.value].MAX_VALUE * relationLevelDepth / 100;
-  imgPreview.style.filter = effect[filterChecked.value].filter + '(' + percentDepth + effect[filterChecked.value].unit + ')';
+  // находим текущее положение пина относительно полосы в значениях фильтра
+  var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
+  setFilterValue(percentDepth);
 });
 
 buttonsEffectsList.addEventListener('change', function (evt) {
@@ -251,5 +252,11 @@ buttonsEffectsList.addEventListener('change', function (evt) {
   }
   imgPreview.classList.add('effects__preview--' + evt.target.value);
   filterChecked = evt.target;
-  imgPreview.style.filter = effect[filterChecked.value].filter + '(' + effect[filterChecked.value].MIN_VALUE + effect[filterChecked.value].unit + ')';
+  setFilterValue(effect[filterChecked.value].MAX_VALUE);
+  if (effect[filterChecked.value].filter === 'none') {
+    imgPreview.style.filter = '';
+    effectLevel.classList.add('hidden');
+  } else {
+    effectLevel.classList.remove('hidden');
+  }
 });
