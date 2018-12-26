@@ -260,3 +260,51 @@ buttonsEffectsList.addEventListener('change', function (evt) {
     effectLevel.classList.remove('hidden');
   }
 });
+
+// Валидация хэш-тегов
+
+var hashTagInput = document.querySelector('.text__hashtags');
+var commentField = document.querySelector('.text__description');
+
+hashTagInput.addEventListener('input', function (evt) {
+  var tagsArray = evt.target.value.toLowerCase().split(' ');
+  var validityMessage = '';
+  var tagList = {};
+  for (var i = 0; i < tagsArray.length; i++) {
+    var tag = tagsArray[i];
+    if (tag[0] !== '#') {
+      validityMessage = 'Хэш-тег начинается с символа # (решётка)';
+    } else if (tag.length === 1) {
+      validityMessage = 'хеш-тег не может состоять только из одной решётки';
+    } else if (tag.length > 20) {
+      validityMessage = 'Максимальная длина одного хэш-тега 20 символов, включая решётку';
+    } else if (tag.indexOf('#', 1) > 0) {
+      validityMessage = 'Хэш-теги разделяются пробелами';
+    } else if (tagList[tag]) {
+      validityMessage = 'Один и тот же хэш-тег не может быть использован дважды';
+    } else if (tagsArray.length > 5) {
+      validityMessage = 'Нельзя указать больше пяти хэш-тегов';
+    }
+    tagList[tag] = true;
+    if (validityMessage) {
+      break;
+    }
+  }
+  hashTagInput.setCustomValidity(validityMessage);
+});
+
+hashTagInput.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onEscPress);
+});
+
+hashTagInput.addEventListener('blur', function () {
+  document.addEventListener('keydown', onEscPress);
+});
+
+commentField.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onEscPress);
+});
+
+commentField.addEventListener('blur', function () {
+  document.addEventListener('keydown', onEscPress);
+});
