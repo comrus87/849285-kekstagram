@@ -184,11 +184,8 @@ var closeUploadFile = function () {
   uploadImage.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscPress);
-  uploadFile.value = '';
-  hashTagInput.value = '';
-  commentField.value = '';
   imgPreview.style.filter = '';
-  imgUploadPreview.style.transform = 'scale(' + 1 + ')';
+  imgUploadPreview.style.transform = '';
   controlValue = MAX_CONTROL;
   form.reset();
   hashTagInput.style.outline = '';
@@ -197,6 +194,7 @@ var closeUploadFile = function () {
   }
   buttonsEffectsList.removeEventListener('change', addPictureFilter);
   hashTagInput.removeEventListener('input', validationHashTag);
+  scale.removeEventListener('click', changeScale);
 };
 
 cancelUploadFile.addEventListener('click', function () {
@@ -331,12 +329,7 @@ var validationHashTag = function (evt) {
       break;
     }
   }
-  if (validityMessage) {
-    hashTagInput.style.outline = '3px solid red';
-  } else {
-    hashTagInput.style.outline = '';
-  }
-
+  hashTagInput.style.outline = validityMessage ? '3px solid red' : '';
   hashTagInput.setCustomValidity(validityMessage);
   if (!evt.target.value) {
     hashTagInput.setCustomValidity('');
