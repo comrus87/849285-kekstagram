@@ -189,7 +189,7 @@ var closeUploadFile = function () {
   commentField.value = '';
   imgPreview.style.filter = '';
   imgUploadPreview.style.transform = 'scale(' + 1 + ')';
-  controlValue = '100';
+  controlValue = MAX_CONTROL;
   form.reset();
   hashTagInput.style.outline = '';
   if (filterChecked) {
@@ -288,7 +288,6 @@ var scale = document.querySelector('.scale');
 
 
 var changeScale = function (evt) {
-  evt.target.addEventListener('click', changeScale);
   if (controlValue > CONTROL_STEP && evt.target === controlSmaller) {
     controlValue -= CONTROL_STEP;
   } else if (controlValue < MAX_CONTROL && evt.target === controlBigger) {
@@ -299,7 +298,6 @@ var changeScale = function (evt) {
 };
 
 scale.addEventListener('click', changeScale);
-
 
 // Валидация хэш-тегов
 
@@ -362,7 +360,7 @@ commentField.addEventListener('blur', function () {
 });
 
 // Отправка формы
-var form = document.querySelector('.img-filters__form');
+var form = document.querySelector('.img-upload__form');
 // var buttonSubmit = document.querySelector('.img-upload__submit');
 
 // buttonSubmit.addEventListener('click', function () {
