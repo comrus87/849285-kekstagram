@@ -188,8 +188,8 @@ var closeUploadFile = function () {
   hashTagInput.value = '';
   commentField.value = '';
   imgPreview.style.filter = '';
-  controlValuePercent.value = '100%';
   imgUploadPreview.style.transform = 'scale(' + 1 + ')';
+  controlValue = '100';
   form.reset();
   hashTagInput.style.outline = '';
   if (filterChecked) {
