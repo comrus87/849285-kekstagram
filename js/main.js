@@ -191,6 +191,7 @@ var closeUploadFile = function () {
   controlValuePercent.value = '100%';
   imgUploadPreview.style.transform = 'scale(' + 1 + ')';
   form.reset();
+  hashTagInput.style.outline = '';
   if (filterChecked) {
     imgPreview.classList.remove('effects__preview--' + filterChecked.value);
   }
@@ -337,7 +338,11 @@ var validationHashTag = function (evt) {
   } else {
     hashTagInput.style.outline = '';
   }
+
   hashTagInput.setCustomValidity(validityMessage);
+  if (!evt.target.value) {
+    hashTagInput.setCustomValidity('');
+  }
 };
 
 hashTagInput.addEventListener('focus', function () {
