@@ -5,6 +5,10 @@ var MAX_LIKES = 200;
 var MIN_COMMENTS = 5;
 var MAX_COMMENTS = 10;
 var MAX_COUNT = 25;
+var CONTROL_STEP = 25;
+var MAX_CONTROL = 100;
+var MAX_LENGTH_TAG = 20;
+var MAX_COUNT_TAG = 5;
 var messages = ['Всё отлично!', 'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
@@ -178,6 +182,7 @@ uploadFile.addEventListener('change', function () {
   effectLevel.classList.add('hidden');
   buttonsEffectsList.addEventListener('change', addPictureFilter);
   hashTagInput.addEventListener('input', validationHashTag);
+  scale.addEventListener('click', changeScale);
 });
 
 var closeUploadFile = function () {
@@ -194,7 +199,9 @@ var closeUploadFile = function () {
   }
   buttonsEffectsList.removeEventListener('change', addPictureFilter);
   hashTagInput.removeEventListener('input', validationHashTag);
+  addDefaultValue();
   scale.removeEventListener('click', changeScale);
+  hashTagInput.setCustomValidity('');
 };
 
 cancelUploadFile.addEventListener('click', function () {
@@ -211,6 +218,15 @@ var pinEffectLevel = document.querySelector('.effect-level__pin');
 var effectLine = document.querySelector('.effect-level__line');
 var filterChecked = document.querySelector('.effects__list input:checked');
 var effectLevel = document.querySelector('.effect-level');
+var effectDepth = document.querySelector('.effect-level__depth');
+var effectLevelvalue = document.querySelector('.effect-level__value');
+
+var addDefaultValue = function () {
+  pinEffectLevel.style.left = MAX_CONTROL + '%';
+  effectDepth.style.width = pinEffectLevel.style.left;
+};
+
+addDefaultValue();
 
 var effect = {
   none: {
@@ -252,17 +268,10 @@ var setFilterValue = function (value) {
   imgPreview.style.filter = effect[filterChecked.value].filter + '(' + value + effect[filterChecked.value].unit + ')';
 };
 
-pinEffectLevel.addEventListener('mouseup', function () {
-  // находим текущее положение пина в процентах
-  var relationLevelDepth = Math.round(pinEffectLevel.offsetLeft * 100 / effectLine.clientWidth);
-  // находим текущее положение пина относительно полосы в значениях фильтра
-  var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
-  setFilterValue(percentDepth);
-});
-
 var addPictureFilter = function (evt) {
   if (filterChecked) {
     imgPreview.classList.remove('effects__preview--' + filterChecked.value);
+    addDefaultValue();
   }
   imgPreview.classList.add('effects__preview--' + evt.target.value);
   filterChecked = evt.target;
@@ -275,13 +284,62 @@ var addPictureFilter = function (evt) {
   }
 };
 
+//  Перемещаем пин по слайдеру
+
+pinEffectLevel.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+    };
+
+    pinEffectLevel.style.left = (pinEffectLevel.offsetLeft - shift.x) + 'px';
+
+    if (pinEffectLevel.offsetLeft < 0) {
+      pinEffectLevel.style.left = 0;
+    } else if (pinEffectLevel.offsetLeft > effectLine.offsetWidth) {
+      pinEffectLevel.style.left = effectLine.offsetWidth + 'px';
+    }
+
+    // находим текущее положение пина в процентах
+    var relationLevelDepth = Math.round(pinEffectLevel.offsetLeft * 100 / effectLine.clientWidth);
+
+    // находим текущее положение пина относительно полосы в значениях фильтра
+    var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
+    setFilterValue(percentDepth);
+    effectDepth.style.width = pinEffectLevel.offsetLeft * 100 / effectLine.offsetWidth + '%';
+
+    effectLevelvalue.value = parseInt(effectDepth.style.width, 10);
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
+
 // Изменение масштаба изображения
 var controlSmaller = document.querySelector('.scale__control--smaller');
 var controlBigger = document.querySelector('.scale__control--bigger');
 var controlValuePercent = document.querySelector('.scale__control--value');
 var controlValue = parseInt(controlValuePercent.value, 10);
-var CONTROL_STEP = 25;
-var MAX_CONTROL = 100;
 var scale = document.querySelector('.scale');
 
 
@@ -295,14 +353,11 @@ var changeScale = function (evt) {
   imgUploadPreview.style.transform = 'scale(' + controlValue / 100 + ')';
 };
 
-scale.addEventListener('click', changeScale);
 
 // Валидация хэш-тегов
 
 var hashTagInput = document.querySelector('.text__hashtags');
 var commentField = document.querySelector('.text__description');
-var MAX_LENGTH_TAG = 20;
-var MAX_COUNT_TAG = 5;
 
 var validationHashTag = function (evt) {
   var tagsArray = evt.target.value.toLowerCase().split(' ');
@@ -356,8 +411,4 @@ commentField.addEventListener('blur', function () {
 var form = document.querySelector('.img-upload__form');
 // var buttonSubmit = document.querySelector('.img-upload__submit');
 
-// buttonSubmit.addEventListener('click', function () {
-//   if (hashTagInput.checkValidity() === false) {
-//     hashTagInput.style.outline = '3px solid red';
-//   }
-// });
+
