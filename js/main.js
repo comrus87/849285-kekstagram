@@ -351,7 +351,6 @@ var changeScale = function (evt) {
   imgUploadPreview.style.transform = 'scale(' + controlValue / 100 + ')';
 };
 
-scale.addEventListener('click', changeScale);
 
 // Валидация хэш-тегов
 
