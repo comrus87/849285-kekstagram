@@ -290,20 +290,20 @@ pinEffectLevel.addEventListener('mousedown', function (evt) {
 
     pinEffectLevel.style.left = (pinEffectLevel.offsetLeft - shift.x) + 'px';
 
+    if (pinEffectLevel.offsetLeft < 0) {
+      pinEffectLevel.style.left = 0;
+    } else if (pinEffectLevel.offsetLeft > effectLine.offsetWidth) {
+      pinEffectLevel.style.left = effectLine.offsetWidth + 'px';
+    }
+
     // находим текущее положение пина в процентах
     var relationLevelDepth = Math.round(pinEffectLevel.offsetLeft * 100 / effectLine.clientWidth);
+
     // находим текущее положение пина относительно полосы в значениях фильтра
     var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
     setFilterValue(percentDepth);
 
-    var pinPosition = pinEffectLevel.getBoundingClientRect();
-    var linePosition = effectLine.getBoundingClientRect();
-    if (pinPosition.left < linePosition.left) {
-      pinEffectLevel.style.left = 0;
-    } else if (pinPosition.right > linePosition.right) {
-      pinEffectLevel.style.left = effectLine.offsetWidth + 'px';
-    }
-    effectDepth.style.width = (pinPosition.left - linePosition.left) * 100 / effectLine.offsetWidth + '%';
+    effectDepth.style.width = pinEffectLevel.offsetLeft * 100 / effectLine.offsetWidth + '%';
   };
 
   var onMouseUp = function (upEvt) {
