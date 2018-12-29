@@ -5,6 +5,10 @@ var MAX_LIKES = 200;
 var MIN_COMMENTS = 5;
 var MAX_COMMENTS = 10;
 var MAX_COUNT = 25;
+var CONTROL_STEP = 25;
+var MAX_CONTROL = 100;
+var MAX_LENGTH_TAG = 20;
+var MAX_COUNT_TAG = 5;
 var messages = ['Всё отлично!', 'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
@@ -194,7 +198,9 @@ var closeUploadFile = function () {
   }
   buttonsEffectsList.removeEventListener('change', addPictureFilter);
   hashTagInput.removeEventListener('input', validationHashTag);
-  scale.removeEventListener('click', changeScale);
+  pinEffectLevel.style.left = MAX_CONTROL + '%';
+  effectDepth.style.width = pinEffectLevel.style.left;
+  // scale.removeEventListener('click', changeScale);
 };
 
 cancelUploadFile.addEventListener('click', function () {
@@ -212,6 +218,9 @@ var effectLine = document.querySelector('.effect-level__line');
 var filterChecked = document.querySelector('.effects__list input:checked');
 var effectLevel = document.querySelector('.effect-level');
 var effectDepth = document.querySelector('.effect-level__depth');
+
+pinEffectLevel.style.left = MAX_CONTROL + '%';
+effectDepth.style.width = pinEffectLevel.style.left;
 
 var effect = {
   none: {
@@ -302,7 +311,6 @@ pinEffectLevel.addEventListener('mousedown', function (evt) {
     // находим текущее положение пина относительно полосы в значениях фильтра
     var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
     setFilterValue(percentDepth);
-
     effectDepth.style.width = pinEffectLevel.offsetLeft * 100 / effectLine.offsetWidth + '%';
   };
 
@@ -323,8 +331,6 @@ var controlSmaller = document.querySelector('.scale__control--smaller');
 var controlBigger = document.querySelector('.scale__control--bigger');
 var controlValuePercent = document.querySelector('.scale__control--value');
 var controlValue = parseInt(controlValuePercent.value, 10);
-var CONTROL_STEP = 25;
-var MAX_CONTROL = 100;
 var scale = document.querySelector('.scale');
 
 
@@ -344,8 +350,6 @@ scale.addEventListener('click', changeScale);
 
 var hashTagInput = document.querySelector('.text__hashtags');
 var commentField = document.querySelector('.text__description');
-var MAX_LENGTH_TAG = 20;
-var MAX_COUNT_TAG = 5;
 
 var validationHashTag = function (evt) {
   var tagsArray = evt.target.value.toLowerCase().split(' ');
