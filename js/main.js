@@ -182,6 +182,7 @@ uploadFile.addEventListener('change', function () {
   effectLevel.classList.add('hidden');
   buttonsEffectsList.addEventListener('change', addPictureFilter);
   hashTagInput.addEventListener('input', validationHashTag);
+  scale.addEventListener('click', changeScale);
 });
 
 var closeUploadFile = function () {
@@ -198,9 +199,8 @@ var closeUploadFile = function () {
   }
   buttonsEffectsList.removeEventListener('change', addPictureFilter);
   hashTagInput.removeEventListener('input', validationHashTag);
-  pinEffectLevel.style.left = MAX_CONTROL + '%';
-  effectDepth.style.width = pinEffectLevel.style.left;
-  // scale.removeEventListener('click', changeScale);
+  addDefaultValue();
+  scale.removeEventListener('click', changeScale);
 };
 
 cancelUploadFile.addEventListener('click', function () {
@@ -218,9 +218,14 @@ var effectLine = document.querySelector('.effect-level__line');
 var filterChecked = document.querySelector('.effects__list input:checked');
 var effectLevel = document.querySelector('.effect-level');
 var effectDepth = document.querySelector('.effect-level__depth');
+var effectLevelvalue = document.querySelector('.effect-level__value');
 
-pinEffectLevel.style.left = MAX_CONTROL + '%';
-effectDepth.style.width = pinEffectLevel.style.left;
+var addDefaultValue = function () {
+  pinEffectLevel.style.left = MAX_CONTROL + '%';
+  effectDepth.style.width = pinEffectLevel.style.left;
+};
+
+addDefaultValue();
 
 var effect = {
   none: {
@@ -312,6 +317,8 @@ pinEffectLevel.addEventListener('mousedown', function (evt) {
     var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
     setFilterValue(percentDepth);
     effectDepth.style.width = pinEffectLevel.offsetLeft * 100 / effectLine.offsetWidth + '%';
+
+    effectLevelvalue.value = parseInt(effectDepth.style.width, 10);
   };
 
   var onMouseUp = function (upEvt) {
