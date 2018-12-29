@@ -201,6 +201,7 @@ var closeUploadFile = function () {
   hashTagInput.removeEventListener('input', validationHashTag);
   addDefaultValue();
   scale.removeEventListener('click', changeScale);
+  hashTagInput.setCustomValidity('');
 };
 
 cancelUploadFile.addEventListener('click', function () {
@@ -270,6 +271,7 @@ var setFilterValue = function (value) {
 var addPictureFilter = function (evt) {
   if (filterChecked) {
     imgPreview.classList.remove('effects__preview--' + filterChecked.value);
+    addDefaultValue();
   }
   imgPreview.classList.add('effects__preview--' + evt.target.value);
   filterChecked = evt.target;
