@@ -2,6 +2,7 @@
 (function () {
   var CONTROL_STEP = 25;
   var MAX_CONTROL = 100;
+  var DEFAULT = 'none';
 
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadPreview = document.querySelector('.img-upload__preview');
@@ -12,6 +13,11 @@
   var effectDepth = document.querySelector('.effect-level__depth');
   var effectLevelvalue = document.querySelector('.effect-level__value');
 
+  var controlSmaller = document.querySelector('.scale__control--smaller');
+  var controlBigger = document.querySelector('.scale__control--bigger');
+  var controlValuePercent = document.querySelector('.scale__control--value');
+  var controlValue = parseInt(controlValuePercent.value, 10);
+
   var addDefaultValue = function () {
     pinEffectLevel.style.left = MAX_CONTROL + '%';
     effectDepth.style.width = pinEffectLevel.style.left;
@@ -19,7 +25,7 @@
 
   addDefaultValue();
 
-  var effect = {
+  var Effect = {
     none: {
       filter: 'none',
     },
@@ -56,26 +62,22 @@
   };
 
   var setFilterValue = function (value) {
-    imgPreview.style.filter = effect[filterChecked.value].filter + '(' + value + effect[filterChecked.value].unit + ')';
+    imgPreview.style.filter = Effect[filterChecked.value].filter + '(' + value + Effect[filterChecked.value].unit + ')';
   };
 
   var addPictureFilter = function (evt) {
-    if (filterChecked) {
-      imgPreview.classList.remove('effects__preview--' + filterChecked.value);
-      addDefaultValue();
-    }
+    imgPreview.classList.remove('effects__preview--' + filterChecked.value);
+    addDefaultValue();
     imgPreview.classList.add('effects__preview--' + evt.target.value);
     filterChecked = evt.target;
-    setFilterValue(effect[filterChecked.value].MAX_VALUE);
-    if (effect[filterChecked.value].filter === 'none') {
+    if (Effect[filterChecked.value].filter === DEFAULT) {
       imgPreview.style.filter = '';
       effectLevel.classList.add('hidden');
     } else {
+      setFilterValue(Effect[filterChecked.value].MAX_VALUE);
       effectLevel.classList.remove('hidden');
     }
   };
-
-  //  Перемещаем пин по слайдеру
 
   pinEffectLevel.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -103,15 +105,12 @@
         pinEffectLevel.style.left = effectLine.offsetWidth + 'px';
       }
 
-      // находим текущее положение пина в процентах
       var relationLevelDepth = Math.round(pinEffectLevel.offsetLeft * 100 / effectLine.clientWidth);
 
-      // находим текущее положение пина относительно полосы в значениях фильтра
-      var percentDepth = effect[filterChecked.value].MIN_VALUE + (effect[filterChecked.value].MAX_VALUE - effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
+      var percentDepth = Effect[filterChecked.value].MIN_VALUE + (Effect[filterChecked.value].MAX_VALUE - Effect[filterChecked.value].MIN_VALUE) * relationLevelDepth / 100;
       setFilterValue(percentDepth);
-      effectDepth.style.width = pinEffectLevel.offsetLeft * 100 / effectLine.offsetWidth + '%';
-
-      effectLevelvalue.value = parseInt(effectDepth.style.width, 10);
+      effectDepth.style.width = relationLevelDepth + '%';
+      effectLevelvalue.value = relationLevelDepth;
     };
 
     var onMouseUp = function (upEvt) {
@@ -125,14 +124,7 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-
   // Изменение масштаба изображения
-  var controlSmaller = document.querySelector('.scale__control--smaller');
-  var controlBigger = document.querySelector('.scale__control--bigger');
-  var controlValuePercent = document.querySelector('.scale__control--value');
-  var controlValue = parseInt(controlValuePercent.value, 10);
-
-
   var changeScale = function (evt) {
     if (controlValue > CONTROL_STEP && evt.target === controlSmaller) {
       controlValue -= CONTROL_STEP;

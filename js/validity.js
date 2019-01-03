@@ -7,7 +7,7 @@
   var hashTagInput = document.querySelector('.text__hashtags');
   var commentField = document.querySelector('.text__description');
 
-  var validationHashTag = function (evt) {
+  var validateHashTag = function (evt) {
     var tagsArray = evt.target.value.toLowerCase().split(' ');
     var validityMessage = '';
     var tagList = {};
@@ -55,7 +55,7 @@
     document.addEventListener('keydown', window.preview.onEscPress);
   });
   window.validity = {
-    validationHashTag: validationHashTag,
+    validateHashTag: validateHashTag,
     hashTagInput: hashTagInput
   };
 })();

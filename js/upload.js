@@ -14,7 +14,7 @@
     document.addEventListener('keydown', window.preview.onEscPress);
     window.form.effectLevel.classList.add('hidden');
     buttonsEffectsList.addEventListener('change', window.form.addPictureFilter);
-    window.validity.hashTagInput.addEventListener('input', window.validity.validationHashTag);
+    window.validity.hashTagInput.addEventListener('input', window.validity.validateHashTag);
     scale.addEventListener('click', window.form.changeScale);
   });
 
@@ -27,11 +27,9 @@
     window.form.controlValue = window.form.MAX_CONTROL;
     form.reset();
     window.validity.hashTagInput.style.outline = '';
-    if (window.form.filterChecked) {
-      window.form.imgPreview.classList.remove('effects__preview--' + window.form.filterChecked.value);
-    }
+    window.form.imgPreview.classList.remove('effects__preview--' + window.form.filterChecked.value);
     buttonsEffectsList.removeEventListener('change', window.form.addPictureFilter);
-    window.validity.hashTagInput.removeEventListener('input', window.validity.validationHashTag);
+    window.validity.hashTagInput.removeEventListener('input', window.validity.validateHashTag);
     window.form.addDefaultValue();
     scale.removeEventListener('click', window.form.changeScale);
     window.validity.hashTagInput.setCustomValidity('');

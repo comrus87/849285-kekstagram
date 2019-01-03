@@ -2,11 +2,12 @@
 
 (function () {
   var ESC_KEYCODE = 27;
-
   var bigPicture = document.querySelector('.big-picture');
-
   var socialComments = document.querySelector('.social__comments');
   var socialItemComments = document.querySelector('.social__comment');
+  var cancelBigPicture = document.querySelector('.big-picture__cancel');
+  var thumbnails = document.querySelectorAll('.picture');
+  var body = document.querySelector('body');
 
   var renderComment = function (comment) {
     var commentElement = socialItemComments.cloneNode(true);
@@ -30,20 +31,13 @@
     bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
     bigPicture.querySelector('.social__caption').textContent = picture.descriptions;
     renderAllComments(picture.comments);
+    cancelBigPicture.addEventListener('click', function () {
+      closeBigPicture();
+    });
   };
 
   document.querySelector('.social__comment-count').classList.add('visually-hidden');
   document.querySelector('.comments-loader').classList.add('visually-hidden');
-
-
-  var templateListComment = document.querySelector('.social__comments');
-  var templateComment = document.querySelectorAll('.social__comment');
-  templateListComment.removeChild(templateComment[0]);
-  templateListComment.removeChild(templateComment[1]);
-
-  var cancelBigPicture = document.querySelector('.big-picture__cancel');
-  var thumbnails = document.querySelectorAll('.picture');
-  var body = document.querySelector('body');
 
   var onEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -75,9 +69,6 @@
     document.removeEventListener('keydown', onEscPress);
   };
 
-  cancelBigPicture.addEventListener('click', function () {
-    closeBigPicture();
-  });
   window.preview = {
     body: body,
     onEscPress: onEscPress
