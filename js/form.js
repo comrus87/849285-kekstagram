@@ -209,7 +209,7 @@
 
   window.form = {
     closeUploadFile: closeUploadFile,
-    addSuccessModal: addSuccessModal,
-    addErrorModal: addErrorModal
+    closeSuccessModal: closeSuccessModal,
+    closeErrorModal: closeErrorModal
   };
 })();
