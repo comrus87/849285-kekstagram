@@ -42,7 +42,9 @@
   var onEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeBigPicture();
-      window.closeUploadFile();
+      window.form.closeUploadFile();
+      // window.form.closeSuccessModal();
+      // window.form.closeErrorModal();
     }
   };
 

@@ -1,11 +1,11 @@
 'use strict';
 
 (function () {
-  // Валидация хэш-тегов
   var MAX_LENGTH_TAG = 20;
   var MAX_COUNT_TAG = 5;
   var hashTagInput = document.querySelector('.text__hashtags');
   var commentField = document.querySelector('.text__description');
+  var BORDER_STYLE = '3px solid red';
 
   var validateHashTag = function (evt) {
     var tagsArray = evt.target.value.toLowerCase().split(' ');
@@ -32,7 +32,7 @@
         break;
       }
     }
-    hashTagInput.style.outline = validityMessage ? '3px solid red' : '';
+    hashTagInput.style.outline = validityMessage ? BORDER_STYLE : '';
     hashTagInput.setCustomValidity(validityMessage);
     if (!evt.target.value) {
       hashTagInput.setCustomValidity('');
