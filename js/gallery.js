@@ -1,11 +1,10 @@
 'use strict';
 (function () {
   // Отрисовываем миниаютюры
-  // var MAX_COUNT = 25;
+  var MAX_COUNT = 25;
 
   // var photos = window.generatePhotos(MAX_COUNT);
   var photos = [];
-
   var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var photoContainer = document.querySelector('.pictures');
 
@@ -19,7 +18,7 @@
 
   var renderAllPhoto = function (photosArray) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photosArray; i++) {
+    for (var i = 0; i < MAX_COUNT; i++) {
       fragment.appendChild(renderPhoto(photosArray[i]));
     }
     photoContainer.appendChild(fragment);
@@ -44,6 +43,5 @@
   };
 
   window.backend.getData(onSuccessLoad, onErrorLoad);
-
   window.photos = photos;
 })();
