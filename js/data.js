@@ -21,7 +21,6 @@
   ];
 
   var names = ['Артем', 'Алексей', 'Максим', 'Наталья', 'Евгения', 'Жорик'];
-  // Находим случайное значение
   var getRandomNumber = function (min, max) {
     return Math.round(Math.random() * (max - min) + min);
   };
