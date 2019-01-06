@@ -6,7 +6,6 @@
   var socialComments = document.querySelector('.social__comments');
   var socialItemComments = document.querySelector('.social__comment');
   var cancelBigPicture = document.querySelector('.big-picture__cancel');
-  // var thumbnails = document.querySelectorAll('.picture');
   var body = document.querySelector('body');
 
   var renderComment = function (comment) {
@@ -29,7 +28,7 @@
     bigPicture.querySelector('.big-picture__img img').src = picture.url;
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
     bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
-    bigPicture.querySelector('.social__caption').textContent = picture.descriptions;
+    bigPicture.querySelector('.social__caption').textContent = picture.description;
     renderAllComments(picture.comments);
     cancelBigPicture.addEventListener('click', function () {
       closeBigPicture();
@@ -43,8 +42,6 @@
     if (evt.keyCode === ESC_KEYCODE) {
       closeBigPicture();
       window.form.closeUploadFile();
-      // window.form.closeSuccessModal();
-      // window.form.closeErrorModal();
     }
   };
 
@@ -73,6 +70,7 @@
   window.preview = {
     body: body,
     onEscPress: onEscPress,
+    ESC_KEYCODE: ESC_KEYCODE,
     renderAllBigPicture: renderAllBigPicture
   };
 })();

@@ -176,7 +176,8 @@
     main.appendChild(success);
     var successButton = success.querySelector('.success__button');
     successButton.addEventListener('click', closeSuccessModal);
-    // document.addEventListener('keydown', window.preview.onEscPress);
+    document.addEventListener('keydown', onEscCloseSuccess);
+    document.addEventListener('click', closeSuccessModal);
   };
 
   var closeModal = function (modal) {
@@ -185,6 +186,14 @@
 
   var closeSuccessModal = function () {
     closeModal('.success');
+    document.removeEventListener('keydown', onEscCloseSuccess);
+    document.removeEventListener('click', closeSuccessModal);
+  };
+
+  var onEscCloseSuccess = function (evt) {
+    if (evt.keyCode === window.preview.ESC_KEYCODE) {
+      closeSuccessModal();
+    }
   };
 
   var addErrorModal = function () {
@@ -192,11 +201,20 @@
     main.appendChild(error);
     var errorButton = error.querySelector('.error__button');
     errorButton.addEventListener('click', closeErrorModal);
-    // document.addEventListener('keydown', window.preview.onEscPress);
+    document.addEventListener('keydown', onEscCloseError);
+    document.addEventListener('click', closeErrorModal);
   };
 
   var closeErrorModal = function () {
     closeModal('.error');
+    document.removeEventListener('keydown', onEscCloseError);
+    document.removeEventListener('click', closeErrorModal);
+  };
+
+  var onEscCloseError = function (evt) {
+    if (evt.keyCode === window.preview.ESC_KEYCODE) {
+      closeErrorModal();
+    }
   };
 
   var uploadOnSubmit = function (evt) {
@@ -208,8 +226,6 @@
   form.addEventListener('submit', uploadOnSubmit);
 
   window.form = {
-    closeUploadFile: closeUploadFile,
-    closeSuccessModal: closeSuccessModal,
-    closeErrorModal: closeErrorModal
+    closeUploadFile: closeUploadFile
   };
 })();
