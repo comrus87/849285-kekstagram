@@ -24,25 +24,41 @@
     for (var i = 0; i < comments.length; i++) {
       fragment.appendChild(renderComment(comments[i]));
       if (comments.length >= STEP_COMMENTS) {
-        commentsLoader.classList.add('visually-hidden');
-      } else if (comments.length <= STEP_COMMENTS) {
         commentsLoader.classList.remove('visually-hidden');
+      } else if (comments.length <= STEP_COMMENTS) {
+        commentsLoader.classList.add('visually-hidden');
       }
     }
     socialComments.appendChild(fragment);
+    showCommentsCount(comments.length);
   };
 
+
+  var showCommentsCount = function (count) {
+    var visualComments = bigPicture.querySelectorAll('.social__comment:not(.visually-hidden)').length;
+    var commentsCount = visualComments + ' из ' + '<span class="comments-count">' + count + '</span>' + ' комментариев';
+    commentCount.innerHTML = commentsCount;
+  };
+
+  var getCommentsListener = function (pictures) {
+    return function () {
+      STEP_COMMENTS += 5;
+      renderAllComments(pictures.comments.slice(0, STEP_COMMENTS));
+    };
+  };
 
   var renderBigPicture = function (picture) {
     bigPicture.querySelector('.big-picture__img img').src = picture.url;
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
     bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
     bigPicture.querySelector('.social__caption').textContent = picture.description;
-    renderAllComments(picture.comments);
+    renderAllComments(picture.comments.slice(0, STEP_COMMENTS));
+    commentsLoader.addEventListener('click', getCommentsListener(picture));
     cancelBigPicture.addEventListener('click', function () {
       closeBigPicture();
     });
   };
+
 
   var onEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -70,6 +86,7 @@
     bigPicture.classList.add('hidden');
     body.classList.remove('modal-open');
     document.removeEventListener('keydown', onEscPress);
+    commentsLoader.removeEventListener('click', getCommentsListener);
   };
 
   window.preview = {
