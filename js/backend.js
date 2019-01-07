@@ -2,12 +2,13 @@
 (function () {
   var URL_GET = 'https://js.dump.academy/kekstagram/data';
   var URL_POST = 'https://js.dump.academy/kekstagram';
-  var sendRequest = function (onLoad, onError) {
+  var STATUS_OK = 200;
+  var getRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       // console.log(xhr.response);
-      if (xhr.status === 200) {
+      if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -25,13 +26,13 @@
   };
 
   var getData = function (onLoad, onError) {
-    var get = sendRequest(onLoad, onError);
+    var get = getRequest(onLoad, onError);
     get.open('GET', URL_GET);
     get.send();
   };
 
   var postData = function (data, onLoad, onError) {
-    var post = sendRequest(onLoad, onError);
+    var post = getRequest(onLoad, onError);
     post.open('POST', URL_POST);
     post.send(data);
   };
