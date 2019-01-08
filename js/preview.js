@@ -9,7 +9,8 @@
   var body = document.querySelector('body');
   var STEP_COMMENTS = 5;
   var commentsLoader = bigPicture.querySelector('.comments-loader');
-  var commentCount = bigPicture.querySelector('.social__comment-count');
+  var socialCommentCount = bigPicture.querySelector('.social__comment-count');
+  // var commentsCount = document.querySelector('.comments-count');
 
   var renderComment = function (comment) {
     var commentElement = socialItemComments.cloneNode(true);
@@ -30,15 +31,16 @@
       }
     }
     socialComments.appendChild(fragment);
-    showCommentsCount(comments.length);
+    showCommentsCount(comments.lenght);
   };
 
 
   var showCommentsCount = function (count) {
     var visualComments = bigPicture.querySelectorAll('.social__comment:not(.visually-hidden)').length;
-    var commentsCount = visualComments + ' из ' + '<span class="comments-count">' + count + '</span>' + ' комментариев';
-    commentCount.innerHTML = commentsCount;
+    var commentCount = visualComments + ' из ' + '<span class="comments-count">' + count + '</span>' + ' комментариев';
+    socialCommentCount.innerHTML = commentCount;
   };
+
 
   var getCommentsListener = function (pictures) {
     return function () {
