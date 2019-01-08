@@ -3,11 +3,11 @@
   var URL_GET = 'https://js.dump.academy/kekstagram/data';
   var URL_POST = 'https://js.dump.academy/kekstagram';
   var STATUS_OK = 200;
+  var TIME = 10000;
   var getRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      // console.log(xhr.response);
       if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
       } else {
@@ -21,7 +21,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = TIME;
     return xhr;
   };
 

@@ -3,9 +3,9 @@
 (function () {
   var MAX_LENGTH_TAG = 20;
   var MAX_COUNT_TAG = 5;
+  var BORDER_STYLE = '3px solid red';
   var hashTagInput = document.querySelector('.text__hashtags');
   var commentField = document.querySelector('.text__description');
-  var BORDER_STYLE = '3px solid red';
 
   var validateHashTag = function (evt) {
     var tagsArray = evt.target.value.toLowerCase().split(' ');

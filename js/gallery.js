@@ -1,12 +1,12 @@
 'use strict';
 (function () {
+  var NEW_PICTURES = 10;
   var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var photoContainer = document.querySelector('.pictures');
   var imageFilters = document.querySelector('.img-filters');
   var filterPopular = imageFilters.querySelector('#filter-popular');
   var filterNew = imageFilters.querySelector('#filter-new');
   var filterDiscussed = imageFilters.querySelector('#filter-discussed');
-  var NEW_PICTURES = 10;
 
   var renderPhoto = function (photo) {
     var photoElement = photoTemplate.cloneNode(true);
@@ -16,19 +16,19 @@
     return photoElement;
   };
 
-  var renderAllPhoto = function (photosArray) {
+  var renderPhotos = function (photos) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photosArray.length; i++) {
-      fragment.appendChild(renderPhoto(photosArray[i]));
-    }
+    photos.forEach(function (photo) {
+      fragment.appendChild(renderPhoto(photo));
+    });
     photoContainer.appendChild(fragment);
     var thumbnails = document.querySelectorAll('.picture');
-    window.preview.renderAllBigPicture(thumbnails, photosArray);
+    window.preview.renderAllBigPicture(thumbnails, photos);
   };
 
-  var onSuccessLoad = function (photosArray) {
-    window.photos = photosArray;
-    renderAllPhoto(window.photos);
+  var onSuccessLoad = function (photos) {
+    window.photos = photos;
+    renderPhotos(window.photos);
     imageFilters.classList.remove('img-filters--inactive');
   };
 
@@ -65,33 +65,33 @@
 
   var updatePictures = function (newArray) {
     removePictures();
-    renderAllPhoto(newArray);
+    renderPhotos(newArray);
   };
 
-  var onfilterPopular = function () {
+  var onFilterPopular = function () {
     checkActiveFilter(filterPopular);
     var copyPhotos = window.photos;
     updatePictures(copyPhotos);
   };
 
   var getRandomArray = function (array) {
-    for (var i = 0; i < array.length; i++) {
+    array.forEach(function (photo, i) {
       var randomIndex = Math.round(Math.random() * (array.length - 1));
       var element = array[i];
       array[i] = array[randomIndex];
       array[randomIndex] = element;
-    }
+    });
     return array;
   };
 
-  var onfilterNew = function () {
+  var onFilterNew = function () {
     checkActiveFilter(filterNew);
     var copyPhotos = window.photos.slice();
     var randomCopyPhotos = getRandomArray(copyPhotos).slice(0, NEW_PICTURES);
     updatePictures(randomCopyPhotos);
   };
 
-  var onfilterDiscussed = function () {
+  var onFilterDiscussed = function () {
     checkActiveFilter(filterDiscussed);
     var copyPhotos = window.photos.slice();
     copyPhotos.sort(function (a, b) {
@@ -101,12 +101,12 @@
   };
 
   filterPopular.addEventListener('click', function () {
-    window.debounce(onfilterPopular);
+    window.debounce(onFilterPopular);
   });
   filterNew.addEventListener('click', function () {
-    window.debounce(onfilterNew);
+    window.debounce(onFilterNew);
   });
   filterDiscussed.addEventListener('click', function () {
-    window.debounce(onfilterDiscussed);
+    window.debounce(onFilterDiscussed);
   });
 })();

@@ -3,6 +3,9 @@
   var CONTROL_STEP = 25;
   var MAX_CONTROL = 100;
   var DEFAULT = 'none';
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var main = document.querySelector('main');
 
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadPreview = document.querySelector('.img-upload__preview');
@@ -30,9 +33,6 @@
   };
 
   var Effect = {
-    none: {
-      filter: 'none',
-    },
     chrome: {
       filter: 'grayscale',
       MIN_VALUE: 0,
@@ -74,7 +74,7 @@
     addDefaultValue();
     imgPreview.classList.add('effects__preview--' + evt.target.value);
     filterChecked = evt.target;
-    if (Effect[filterChecked.value].filter === DEFAULT) {
+    if (filterChecked.value === DEFAULT) {
       imgPreview.style.filter = '';
       effectLevel.classList.add('hidden');
     } else {
@@ -166,10 +166,6 @@
   cancelUploadFile.addEventListener('click', function () {
     closeUploadFile();
   });
-
-  var successTemplate = document.querySelector('#success').content.querySelector('.success');
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var main = document.querySelector('main');
 
   var addSuccessModal = function () {
     var success = successTemplate.cloneNode(true);
