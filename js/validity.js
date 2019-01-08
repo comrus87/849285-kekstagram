@@ -27,6 +27,7 @@
         validityMessage = 'Один и тот же хэш-тег не может быть использован дважды';
       }
       tagList[tag] = true;
+      return !!validityMessage;
     });
     hashTagInput.style.outline = validityMessage ? BORDER_STYLE : '';
     hashTagInput.setCustomValidity(validityMessage);
