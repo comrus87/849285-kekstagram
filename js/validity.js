@@ -14,8 +14,7 @@
     if (tagsArray.length > MAX_COUNT_TAG) {
       validityMessage = 'Нельзя указать больше пяти хэш-тегов';
     }
-    for (var i = 0; i < tagsArray.length; i++) {
-      var tag = tagsArray[i];
+    tagsArray.some(function (tag) {
       if (tag[0] !== '#') {
         validityMessage = 'Хэш-тег начинается с символа # (решётка)';
       } else if (tag.length === 1) {
@@ -27,11 +26,7 @@
       } else if (tagList[tag]) {
         validityMessage = 'Один и тот же хэш-тег не может быть использован дважды';
       }
-      tagList[tag] = true;
-      if (validityMessage) {
-        break;
-      }
-    }
+    });
     hashTagInput.style.outline = validityMessage ? BORDER_STYLE : '';
     hashTagInput.setCustomValidity(validityMessage);
     if (!evt.target.value) {
