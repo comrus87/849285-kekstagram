@@ -100,14 +100,14 @@
 
   var onFilterNew = function () {
     checkActiveFilter(filterNew);
-    var copyPhotos = window.photos.slice();
+    var copyPhotos = window.gallery.photos.slice();
     var randomCopyPhotos = getRandomArray(copyPhotos).slice(0, NEW_PICTURES);
     updatePictures(randomCopyPhotos);
   };
 
   var onFilterDiscussed = function () {
     checkActiveFilter(filterDiscussed);
-    var copyPhotos = window.photos.slice();
+    var copyPhotos = window.gallery.photos.slice();
     copyPhotos.sort(function (a, b) {
       return (b.comments.length - a.comments.length);
     });
