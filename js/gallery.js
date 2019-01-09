@@ -34,6 +34,7 @@
 
   var onErrorLoad = function (errorMessage) {
     var node = document.createElement('div');
+    node.classList.add('error-message');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
     node.style.left = 0;
@@ -46,7 +47,6 @@
 
   window.backend.getData(onSuccessLoad, onErrorLoad);
 
-  // функция переключения кнопок
   var checkActiveFilter = function (filter) {
     var checkedFilter = imageFilters.querySelector('.img-filters__button--active');
     if (checkedFilter) {
@@ -55,7 +55,6 @@
     filter.classList.add('img-filters__button--active');
   };
 
-  // функция для удаления
   var removePictures = function () {
     var pictures = photoContainer.querySelectorAll('.picture');
     pictures.forEach(function (elem) {
@@ -109,4 +108,5 @@
   filterDiscussed.addEventListener('click', function () {
     window.debounce(onFilterDiscussed);
   });
+  window.onErrorLoad = onErrorLoad;
 })();

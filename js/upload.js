@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var effectPreviews = document.querySelectorAll('.effects__preview');
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var effectPreviews = document.querySelectorAll('.effects__preview');
 
   window.form.uploadFile.addEventListener('change', function () {
     var file = window.form.uploadFile.files[0];
@@ -14,7 +14,6 @@
 
     if (matches) {
       var reader = new FileReader();
-
       reader.addEventListener('load', function () {
         window.form.imgPreview.src = reader.result;
         addFilterImages();
@@ -25,6 +24,18 @@
         });
       };
       reader.readAsDataURL(file);
+    } else {
+      window.onErrorLoad('Неверный формат изображения');
+      window.form.closeUploadFile();
+      var message = document.querySelector('.error-message');
+      var removeError = function () {
+        message.classList.add('hidden');
+        document.removeEventListener('click', removeError);
+      };
+      if (message) {
+        document.addEventListener('click', removeError);
+      }
     }
   });
+
 })();
