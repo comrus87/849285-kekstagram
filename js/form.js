@@ -6,7 +6,6 @@
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
-
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var pinEffectLevel = document.querySelector('.effect-level__pin');
@@ -123,7 +122,6 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  // Изменение масштаба изображения
   var changeScale = function (evt) {
     if (controlValue > CONTROL_STEP && evt.target === controlSmaller) {
       controlValue -= CONTROL_STEP;
@@ -222,6 +220,8 @@
   form.addEventListener('submit', uploadOnSubmit);
 
   window.form = {
-    closeUploadFile: closeUploadFile
+    closeUploadFile: closeUploadFile,
+    uploadFile: uploadFile,
+    imgPreview: imgPreview
   };
 })();
