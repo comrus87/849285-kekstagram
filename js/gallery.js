@@ -84,7 +84,7 @@
 
   var onFilterPopular = function () {
     checkActiveFilter(filterPopular);
-    var copyPhotos = window.photos;
+    var copyPhotos = window.gallery.photos;
     updatePictures(copyPhotos);
   };
 
