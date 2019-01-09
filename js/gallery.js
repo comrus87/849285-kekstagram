@@ -27,23 +27,38 @@
   };
 
   var onSuccessLoad = function (photos) {
-    window.photos = photos;
-    renderPhotos(window.photos);
+    window.gallery.photos = photos;
+    renderPhotos(window.gallery.photos);
     imageFilters.classList.remove('img-filters--inactive');
   };
 
   var onErrorLoad = function (errorMessage) {
     var node = document.createElement('div');
     node.classList.add('error-message');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    var createErrorNode = function () {
+      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.fontSize = '30px';
+      node.textContent = errorMessage;
+      return node;
+    };
+    document.body.insertAdjacentElement('afterbegin', createErrorNode());
+    var removeError = function () {
+      node.classList.add('hidden');
+      document.removeEventListener('click', removeError);
+      document.removeEventListener('keydown', removeErrorEsc);
+    };
+    var removeErrorEsc = function (evt) {
+      if (evt.keyCode === window.preview.ESC_KEYCODE) {
+        removeError();
+      }
+    };
+    document.addEventListener('click', removeError);
+    document.addEventListener('keydown', removeErrorEsc);
   };
+
 
   window.backend.getData(onSuccessLoad, onErrorLoad);
 
@@ -108,5 +123,8 @@
   filterDiscussed.addEventListener('click', function () {
     window.debounce(onFilterDiscussed);
   });
-  window.onErrorLoad = onErrorLoad;
+  window.gallery = {
+    photos: [],
+    onErrorLoad: onErrorLoad
+  };
 })();

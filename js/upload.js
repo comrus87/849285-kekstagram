@@ -25,16 +25,8 @@
       };
       reader.readAsDataURL(file);
     } else {
-      window.onErrorLoad('Неверный формат изображения');
+      window.gallery.onErrorLoad('Неверный формат изображения');
       window.form.closeUploadFile();
-      var message = document.querySelector('.error-message');
-      var removeError = function () {
-        message.classList.add('hidden');
-        document.removeEventListener('click', removeError);
-      };
-      if (message) {
-        document.addEventListener('click', removeError);
-      }
     }
   });
 
