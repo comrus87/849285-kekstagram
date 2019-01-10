@@ -32,33 +32,34 @@
     imageFilters.classList.remove('img-filters--inactive');
   };
 
-  var onErrorLoad = function (errorMessage) {
+  var createErrorNode = function (errorMessage) {
     var node = document.createElement('div');
     node.classList.add('error-message');
-    var createErrorNode = function () {
-      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-      node.style.position = 'absolute';
-      node.style.left = 0;
-      node.style.right = 0;
-      node.style.fontSize = '30px';
-      node.textContent = errorMessage;
-      return node;
-    };
-    document.body.insertAdjacentElement('afterbegin', createErrorNode());
-    var removeError = function () {
-      node.classList.add('hidden');
-      document.removeEventListener('click', removeError);
-      document.removeEventListener('keydown', removeErrorEsc);
-    };
-    var removeErrorEsc = function (evt) {
-      if (evt.keyCode === window.preview.ESC_KEYCODE) {
-        removeError();
-      }
-    };
-    document.addEventListener('click', removeError);
-    document.addEventListener('keydown', removeErrorEsc);
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+    return node;
   };
 
+  var onErrorLoad = function (errorMessage) {
+    var node = createErrorNode(errorMessage);
+    var onErrorRemove = function () {
+      window.preview.body.removeChild(node);
+      document.removeEventListener('click', onErrorRemove);
+      document.removeEventListener('keydown', onErrorEsc);
+    };
+    var onErrorEsc = function (evt) {
+      if (evt.keyCode === window.preview.ESC_KEYCODE) {
+        onErrorRemove();
+      }
+    };
+    document.addEventListener('click', onErrorRemove);
+    document.addEventListener('keydown', onErrorEsc);
+  };
 
   window.backend.getData(onSuccessLoad, onErrorLoad);
 
@@ -125,6 +126,7 @@
   });
   window.gallery = {
     photos: [],
+    createErrorNode: createErrorNode,
     onErrorLoad: onErrorLoad
   };
 })();
