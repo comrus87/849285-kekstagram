@@ -132,7 +132,7 @@
     imgUploadPreview.style.transform = 'scale(' + controlValue / 100 + ')';
   };
 
-  uploadFile.addEventListener('change', function (evt) {
+  uploadFile.addEventListener('change', function () {
     uploadImage.classList.remove('hidden');
     window.preview.body.classList.add('modal-open');
     document.addEventListener('keydown', window.preview.onEscPress);
@@ -141,7 +141,7 @@
     window.validity.hashTagInput.addEventListener('input', window.validity.validateHashTag);
     scale.addEventListener('click', changeScale);
     pinEffectLevel.addEventListener('mousedown', moveSlider);
-    window.uploadImage(evt.target, onSuccessUpload, window.onErrorLoad);
+    window.uploadImage(onSuccessUpload, window.onErrorLoad);
   });
 
   var closeUploadFile = function () {

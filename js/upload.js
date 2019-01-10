@@ -3,7 +3,7 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var uploadImage = function (element, onSuccess, onError) {
+  var uploadImage = function (onSuccess, onError) {
     var file = window.form.uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
