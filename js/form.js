@@ -141,7 +141,7 @@
     window.validity.hashTagInput.addEventListener('input', window.validity.validateHashTag);
     scale.addEventListener('click', changeScale);
     pinEffectLevel.addEventListener('mousedown', moveSlider);
-    window.uploadImage(evt.target, onSuccessUpload, window.gallery.onErrorLoad);
+    window.uploadImage(evt.target, onSuccessUpload, window.onErrorLoad);
   });
 
   var closeUploadFile = function () {
