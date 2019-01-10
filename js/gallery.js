@@ -27,26 +27,13 @@
   };
 
   var onSuccessLoad = function (photos) {
-    window.photos = photos;
-    renderPhotos(window.photos);
+    window.gallery.photos = photos;
+    renderPhotos(window.gallery.photos);
     imageFilters.classList.remove('img-filters--inactive');
   };
 
-  var onErrorLoad = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
+  window.backend.getData(onSuccessLoad, window.onErrorLoad);
 
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
-  window.backend.getData(onSuccessLoad, onErrorLoad);
-
-  // функция переключения кнопок
   var checkActiveFilter = function (filter) {
     var checkedFilter = imageFilters.querySelector('.img-filters__button--active');
     if (checkedFilter) {
@@ -55,7 +42,6 @@
     filter.classList.add('img-filters__button--active');
   };
 
-  // функция для удаления
   var removePictures = function () {
     var pictures = photoContainer.querySelectorAll('.picture');
     pictures.forEach(function (elem) {
@@ -70,7 +56,7 @@
 
   var onFilterPopular = function () {
     checkActiveFilter(filterPopular);
-    var copyPhotos = window.photos;
+    var copyPhotos = window.gallery.photos;
     updatePictures(copyPhotos);
   };
 
@@ -86,14 +72,14 @@
 
   var onFilterNew = function () {
     checkActiveFilter(filterNew);
-    var copyPhotos = window.photos.slice();
+    var copyPhotos = window.gallery.photos.slice();
     var randomCopyPhotos = getRandomArray(copyPhotos).slice(0, NEW_PICTURES);
     updatePictures(randomCopyPhotos);
   };
 
   var onFilterDiscussed = function () {
     checkActiveFilter(filterDiscussed);
-    var copyPhotos = window.photos.slice();
+    var copyPhotos = window.gallery.photos.slice();
     copyPhotos.sort(function (a, b) {
       return (b.comments.length - a.comments.length);
     });
@@ -109,4 +95,7 @@
   filterDiscussed.addEventListener('click', function () {
     window.debounce(onFilterDiscussed);
   });
+  window.gallery = {
+    photos: []
+  };
 })();

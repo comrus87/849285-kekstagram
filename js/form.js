@@ -6,7 +6,6 @@
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
-
   var imgPreview = document.querySelector('.img-upload__preview img');
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var pinEffectLevel = document.querySelector('.effect-level__pin');
@@ -15,7 +14,7 @@
   var effectLevel = document.querySelector('.effect-level');
   var effectDepth = document.querySelector('.effect-level__depth');
   var effectLevelvalue = document.querySelector('.effect-level__value');
-
+  var effectPreviews = document.querySelectorAll('.effects__preview');
   var controlSmaller = document.querySelector('.scale__control--smaller');
   var controlBigger = document.querySelector('.scale__control--bigger');
   var controlValuePercent = document.querySelector('.scale__control--value');
@@ -123,7 +122,6 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  // Изменение масштаба изображения
   var changeScale = function (evt) {
     if (controlValue > CONTROL_STEP && evt.target === controlSmaller) {
       controlValue -= CONTROL_STEP;
@@ -143,6 +141,7 @@
     window.validity.hashTagInput.addEventListener('input', window.validity.validateHashTag);
     scale.addEventListener('click', changeScale);
     pinEffectLevel.addEventListener('mousedown', moveSlider);
+    window.uploadImage(onSuccessUpload, window.onErrorLoad);
   });
 
   var closeUploadFile = function () {
@@ -166,6 +165,13 @@
   cancelUploadFile.addEventListener('click', function () {
     closeUploadFile();
   });
+
+  var onSuccessUpload = function (result) {
+    imgPreview.src = result;
+    effectPreviews.forEach(function (element) {
+      element.style.backgroundImage = 'url(' + result + ')';
+    });
+  };
 
   var addSuccessModal = function () {
     var success = successTemplate.cloneNode(true);
@@ -222,6 +228,7 @@
   form.addEventListener('submit', uploadOnSubmit);
 
   window.form = {
-    closeUploadFile: closeUploadFile
+    closeUploadFile: closeUploadFile,
+    uploadFile: uploadFile
   };
 })();
