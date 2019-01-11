@@ -3,7 +3,7 @@
   var createErrorNode = function (errorMessage) {
     var node = document.createElement('div');
     node.classList.add('error-message');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.cssText = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
     node.style.left = 0;
     node.style.right = 0;

@@ -7,6 +7,9 @@
   var filterPopular = imageFilters.querySelector('#filter-popular');
   var filterNew = imageFilters.querySelector('#filter-new');
   var filterDiscussed = imageFilters.querySelector('#filter-discussed');
+  var checkedFilter = imageFilters.querySelector('.img-filters__button--active');
+  var imgFiltersForm = document.querySelector('.img-filters__form');
+  var thumbnails = [];
 
   var renderPhoto = function (photo) {
     var photoElement = photoTemplate.cloneNode(true);
@@ -18,12 +21,11 @@
 
   var renderPhotos = function (photos) {
     var fragment = document.createDocumentFragment();
-    photos.forEach(function (photo) {
-      fragment.appendChild(renderPhoto(photo));
+    thumbnails = photos.map(function (photo) {
+      return fragment.appendChild(renderPhoto(photo));
     });
     photoContainer.appendChild(fragment);
-    var thumbnails = document.querySelectorAll('.picture');
-    window.preview.renderAllBigPicture(thumbnails, photos);
+    window.preview.renderBigPictures(thumbnails, photos);
   };
 
   var onSuccessLoad = function (photos) {
@@ -34,51 +36,51 @@
 
   window.backend.getData(onSuccessLoad, window.onErrorLoad);
 
-  var checkActiveFilter = function (filter) {
-    var checkedFilter = imageFilters.querySelector('.img-filters__button--active');
-    if (checkedFilter) {
-      checkedFilter.classList.remove('img-filters__button--active');
-    }
+  var changeActiveFilter = function (filter) {
+    checkedFilter.classList.remove('img-filters__button--active');
     filter.classList.add('img-filters__button--active');
+    checkedFilter = filter;
   };
 
   var removePictures = function () {
-    var pictures = photoContainer.querySelectorAll('.picture');
-    pictures.forEach(function (elem) {
+    thumbnails.forEach(function (elem) {
       photoContainer.removeChild(elem);
     });
   };
 
-  var updatePictures = function (newArray) {
+  var updatePictures = function (pictures) {
     removePictures();
-    renderPhotos(newArray);
+    window.debounce(function () {
+      renderPhotos(pictures);
+    });
   };
 
-  var onFilterPopular = function () {
-    checkActiveFilter(filterPopular);
+
+  var setFilterPopular = function () {
+    changeActiveFilter(filterPopular);
     var copyPhotos = window.gallery.photos;
     updatePictures(copyPhotos);
   };
 
-  var getRandomArray = function (array) {
-    array.forEach(function (photo, i) {
-      var randomIndex = Math.round(Math.random() * (array.length - 1));
-      var element = array[i];
-      array[i] = array[randomIndex];
-      array[randomIndex] = element;
+  var shuffleArray = function (photos) {
+    photos.forEach(function (photo, i) {
+      var randomIndex = Math.round(Math.random() * (photos.length - 1));
+      var element = photos[i];
+      photos[i] = photos[randomIndex];
+      photos[randomIndex] = element;
     });
-    return array;
+    return photos;
   };
 
-  var onFilterNew = function () {
-    checkActiveFilter(filterNew);
+  var setFilterNew = function () {
+    changeActiveFilter(filterNew);
     var copyPhotos = window.gallery.photos.slice();
-    var randomCopyPhotos = getRandomArray(copyPhotos).slice(0, NEW_PICTURES);
+    var randomCopyPhotos = shuffleArray(copyPhotos).slice(0, NEW_PICTURES);
     updatePictures(randomCopyPhotos);
   };
 
-  var onFilterDiscussed = function () {
-    checkActiveFilter(filterDiscussed);
+  var setFilterDiscussed = function () {
+    changeActiveFilter(filterDiscussed);
     var copyPhotos = window.gallery.photos.slice();
     copyPhotos.sort(function (a, b) {
       return (b.comments.length - a.comments.length);
@@ -86,15 +88,19 @@
     updatePictures(copyPhotos);
   };
 
-  filterPopular.addEventListener('click', function () {
-    window.debounce(onFilterPopular);
-  });
-  filterNew.addEventListener('click', function () {
-    window.debounce(onFilterNew);
-  });
-  filterDiscussed.addEventListener('click', function () {
-    window.debounce(onFilterDiscussed);
-  });
+  var onFilterSelect = function (evt) {
+    var target = evt.target;
+    if (filterPopular === target) {
+      setFilterPopular();
+    } else if (filterNew === target) {
+      setFilterNew();
+    } else if (filterDiscussed === target) {
+      setFilterDiscussed();
+    }
+  };
+
+  imgFiltersForm.addEventListener('click', onFilterSelect);
+
   window.gallery = {
     photos: []
   };

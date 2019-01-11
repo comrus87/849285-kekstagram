@@ -25,8 +25,8 @@
     var fragment = document.createDocumentFragment();
     comments.forEach(function (comment) {
       fragment.appendChild(renderComment(comment));
-      commentsLoader.classList.toggle('visually-hidden', comments.length < count);
     });
+    commentsLoader.classList.toggle('visually-hidden', comments.length < count);
     socialComments.appendChild(fragment);
     showCommentsCount(comments.length, total);
   };
@@ -57,10 +57,9 @@
     });
   };
 
-  var onEscPress = function (evt) {
+  var onBigPictureEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeBigPicture();
-      window.form.closeUploadFile();
     }
   };
 
@@ -69,11 +68,11 @@
       bigPicture.classList.remove('hidden');
       renderBigPicture(photo);
       body.classList.add('modal-open');
-      document.addEventListener('keydown', onEscPress);
+      document.addEventListener('keydown', onBigPictureEscPress);
     });
   };
 
-  var renderAllBigPicture = function (thumbnails, photos) {
+  var renderBigPictures = function (thumbnails, photos) {
     thumbnails.forEach(function (thumbnail, i) {
       addThumbnailListener(thumbnail, photos[i]);
     });
@@ -82,15 +81,14 @@
   var closeBigPicture = function () {
     bigPicture.classList.add('hidden');
     body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onEscPress);
+    document.removeEventListener('keydown', onBigPictureEscPress);
     commentsLoader.removeEventListener('click', commentsListener);
     count = STEP_COMMENTS;
   };
 
   window.preview = {
     body: body,
-    onEscPress: onEscPress,
     ESC_KEYCODE: ESC_KEYCODE,
-    renderAllBigPicture: renderAllBigPicture
+    renderBigPictures: renderBigPictures
   };
 })();
