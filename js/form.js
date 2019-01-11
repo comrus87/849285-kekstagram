@@ -45,7 +45,7 @@
   var filterChecked = document.querySelector('.effects__list input:checked');
   var effectLevel = document.querySelector('.effect-level');
   var effectDepth = document.querySelector('.effect-level__depth');
-  var effectLevelvalue = document.querySelector('.effect-level__value');
+  var effectLevelValue = document.querySelector('.effect-level__value');
   var effectPreviews = document.querySelectorAll('.effects__preview');
   var controlSmaller = document.querySelector('.scale__control--smaller');
   var controlBigger = document.querySelector('.scale__control--bigger');
@@ -61,7 +61,7 @@
   var setDepthValue = function (value) {
     pinEffectLevel.style.left = value + '%';
     effectDepth.style.width = pinEffectLevel.style.left;
-    effectLevelvalue.value = value;
+    effectLevelValue.value = value;
   };
 
   var setFilterValue = function (value) {
@@ -134,7 +134,7 @@
   uploadFile.addEventListener('change', function () {
     uploadImage.classList.remove('hidden');
     window.preview.body.classList.add('modal-open');
-    document.addEventListener('keydown', onUnploadEscPress);
+    document.addEventListener('keydown', onUploadEscPress);
     effectLevel.classList.add('hidden');
     buttonsEffectsList.addEventListener('change', onFilterChange);
     window.validity.hashTagInput.addEventListener('input', window.validity.validateHashTag);
@@ -146,7 +146,7 @@
   var closeUploadFile = function () {
     uploadImage.classList.add('hidden');
     window.preview.body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onUnploadEscPress);
+    document.removeEventListener('keydown', onUploadEscPress);
     imgPreview.style.filter = '';
     imgUploadPreview.style.transform = '';
     controlValue = MAX_CONTROL;
@@ -161,7 +161,7 @@
     pinEffectLevel.removeEventListener('mousedown', onSliderMouseDown);
   };
 
-  var onUnploadEscPress = function (evt) {
+  var onUploadEscPress = function (evt) {
     if (evt.keyCode === window.preview.ESC_KEYCODE) {
       closeUploadFile();
     }
