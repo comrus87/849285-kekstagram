@@ -50,33 +50,36 @@
 
   var updatePictures = function (pictures) {
     removePictures();
-    renderPhotos(pictures);
+    window.debounce(function () {
+      renderPhotos(pictures);
+    });
   };
 
-  var onFilterPopular = function () {
+
+  var setFilterPopular = function () {
     changeActiveFilter(filterPopular);
     var copyPhotos = window.gallery.photos;
     updatePictures(copyPhotos);
   };
 
-  var getRandomArray = function (shuffleArray) {
-    shuffleArray.forEach(function (photo, i) {
-      var randomIndex = Math.round(Math.random() * (shuffleArray.length - 1));
-      var element = shuffleArray[i];
-      shuffleArray[i] = shuffleArray[randomIndex];
-      shuffleArray[randomIndex] = element;
+  var shuffleArray = function (photos) {
+    photos.forEach(function (photo, i) {
+      var randomIndex = Math.round(Math.random() * (photos.length - 1));
+      var element = photos[i];
+      photos[i] = photos[randomIndex];
+      photos[randomIndex] = element;
     });
-    return shuffleArray;
+    return photos;
   };
 
-  var onFilterNew = function () {
+  var setFilterNew = function () {
     changeActiveFilter(filterNew);
     var copyPhotos = window.gallery.photos.slice();
-    var randomCopyPhotos = getRandomArray(copyPhotos).slice(0, NEW_PICTURES);
+    var randomCopyPhotos = shuffleArray(copyPhotos).slice(0, NEW_PICTURES);
     updatePictures(randomCopyPhotos);
   };
 
-  var onFilterDiscussed = function () {
+  var setFilterDiscussed = function () {
     changeActiveFilter(filterDiscussed);
     var copyPhotos = window.gallery.photos.slice();
     copyPhotos.sort(function (a, b) {
@@ -85,16 +88,18 @@
     updatePictures(copyPhotos);
   };
 
-  imgFiltersForm.addEventListener('click', function (evt) {
+  var onFilterSelect = function (evt) {
     var target = evt.target;
     if (filterPopular === target) {
-      window.debounce(onFilterPopular);
+      setFilterPopular();
     } else if (filterNew === target) {
-      window.debounce(onFilterNew);
+      setFilterNew();
     } else if (filterDiscussed === target) {
-      window.debounce(onFilterDiscussed);
+      setFilterDiscussed();
     }
-  });
+  };
+
+  imgFiltersForm.addEventListener('click', onFilterSelect);
 
   window.gallery = {
     photos: []

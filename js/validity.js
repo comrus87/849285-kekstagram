@@ -9,15 +9,13 @@
   var commentField = document.querySelector('.text__description');
 
   var validateHashTag = function (evt) {
-    var tags = evt.target.value.trim().toLowerCase().split(' ').filter(function (tag) {
-      return tag.trim();
-    });
+    var tags = evt.target.value.trim().toLowerCase().split(' ').filter(Boolean);
     var validityMessage = '';
     var tagList = {};
     if (tags.length > MAX_COUNT_TAG) {
       validityMessage = 'Нельзя указать больше пяти хэш-тегов';
     }
-    var validateTagsArray = tags.some(function (tag) {
+    var invalidateTagsArray = tags.some(function (tag) {
       if (tag[0] !== '#') {
         validityMessage = 'Хэш-тег начинается с символа # (решётка)';
       } else if (tag.length === LENGTH_TAG) {
@@ -32,7 +30,7 @@
       tagList[tag] = true;
       return !!validityMessage;
     });
-    hashTagInput.style.outline = validateTagsArray ? BORDER_STYLE : '';
+    hashTagInput.style.outline = invalidateTagsArray ? BORDER_STYLE : '';
     hashTagInput.setCustomValidity(validityMessage);
     if (!evt.target.value) {
       hashTagInput.setCustomValidity('');

@@ -58,9 +58,10 @@
   var scale = document.querySelector('.scale');
   var buttonsEffectsList = document.querySelector('.effects__list');
 
-  var addDefaultValue = function (value) {
+  var setDepthValue = function (value) {
     pinEffectLevel.style.left = value + '%';
     effectDepth.style.width = pinEffectLevel.style.left;
+    effectLevelvalue.value = value;
   };
 
   var setFilterValue = function (value) {
@@ -69,7 +70,7 @@
 
   var onFilterChange = function (evt) {
     imgPreview.classList.remove('effects__preview--' + filterChecked.value);
-    addDefaultValue(MAX_CONTROL);
+    setDepthValue(MAX_CONTROL);
     imgPreview.classList.add('effects__preview--' + evt.target.value);
     filterChecked = evt.target;
     if (filterChecked.value === DEFAULT) {
@@ -109,8 +110,7 @@
       var valueFilterChecked = Effect[filterChecked.value];
       var percentDepth = valueFilterChecked.MIN_VALUE + (valueFilterChecked.MAX_VALUE - valueFilterChecked.MIN_VALUE) * relationLevelDepth / 100;
       setFilterValue(percentDepth);
-      effectDepth.style.width = relationLevelDepth + '%';
-      effectLevelvalue.value = relationLevelDepth;
+      setDepthValue(relationLevelDepth);
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
@@ -155,7 +155,7 @@
     imgPreview.classList.remove('effects__preview--' + filterChecked.value);
     buttonsEffectsList.removeEventListener('change', onFilterChange);
     window.validity.hashTagInput.removeEventListener('input', window.validity.validateHashTag);
-    addDefaultValue(MAX_CONTROL);
+    setDepthValue(MAX_CONTROL);
     scale.removeEventListener('click', onScaleClick);
     window.validity.hashTagInput.setCustomValidity('');
     pinEffectLevel.removeEventListener('mousedown', onSliderMouseDown);
@@ -181,56 +181,60 @@
   var onLoadSuccess = function () {
     var success = successTemplate.cloneNode(true);
     main.appendChild(success);
-    var successButton = success.querySelector('.success__button');
-    successButton.addEventListener('click', onSuccessCLose);
-    document.addEventListener('keydown', onEscCloseSuccess);
-    document.addEventListener('click', onSuccessCLose);
+    document.addEventListener('keydown', onSuccessKeydown);
+    document.addEventListener('click', onSuccessCLick);
   };
 
   var closeModal = function (modal) {
     main.removeChild(document.querySelector(modal));
   };
 
-  var onSuccessCLose = function () {
+  var closeSuccess = function () {
     closeModal('.success');
-    document.removeEventListener('keydown', onEscCloseSuccess);
-    document.removeEventListener('click', onSuccessCLose);
+    document.removeEventListener('keydown', onSuccessKeydown);
+    document.removeEventListener('click', onSuccessCLick);
   };
 
-  var onEscCloseSuccess = function (evt) {
+  var onSuccessCLick = function () {
+    closeSuccess();
+  };
+
+  var onSuccessKeydown = function (evt) {
     if (evt.keyCode === window.preview.ESC_KEYCODE) {
-      onSuccessCLose();
+      closeSuccess();
     }
   };
 
   var onLoadError = function () {
     var error = errorTemplate.cloneNode(true);
     main.appendChild(error);
-    var errorButton = error.querySelector('.error__button');
-    errorButton.addEventListener('click', onErrorClose);
-    document.addEventListener('keydown', onEscCloseError);
-    document.addEventListener('click', onErrorClose);
+    document.addEventListener('keydown', onErrorKeydown);
+    document.addEventListener('click', onErrorCLick);
   };
 
-  var onErrorClose = function () {
+  var closeError = function () {
     closeModal('.error');
-    document.removeEventListener('keydown', onEscCloseError);
-    document.removeEventListener('click', onErrorClose);
+    document.removeEventListener('keydown', onErrorKeydown);
+    document.removeEventListener('click', onErrorCLick);
   };
 
-  var onEscCloseError = function (evt) {
+  var onErrorCLick = function () {
+    closeError();
+  };
+
+  var onErrorKeydown = function (evt) {
     if (evt.keyCode === window.preview.ESC_KEYCODE) {
-      onErrorClose();
+      closeError();
     }
   };
 
-  var onSubmitUpload = function (evt) {
+  var onFormUpload = function (evt) {
     window.backend.postData(new FormData(form), onLoadSuccess, onLoadError);
     evt.preventDefault();
     closeUploadFile();
   };
 
-  form.addEventListener('submit', onSubmitUpload);
+  form.addEventListener('submit', onFormUpload);
 
   window.form = {
     closeUploadFile: closeUploadFile,
