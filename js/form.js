@@ -238,6 +238,7 @@
 
   window.form = {
     closeUploadFile: closeUploadFile,
-    uploadFile: uploadFile
+    uploadFile: uploadFile,
+    onUploadEscPress: onUploadEscPress
   };
 })();

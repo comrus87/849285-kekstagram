@@ -38,19 +38,19 @@
   };
 
   hashTagInput.addEventListener('focus', function () {
-    document.removeEventListener('keydown', window.preview.onEscPress);
+    document.removeEventListener('keydown', window.form.onUploadEscPress);
   });
 
   hashTagInput.addEventListener('blur', function () {
-    document.addEventListener('keydown', window.preview.onEscPress);
+    document.addEventListener('keydown', window.form.onUploadEscPress);
   });
 
   commentField.addEventListener('focus', function () {
-    document.removeEventListener('keydown', window.preview.onEscPress);
+    document.removeEventListener('keydown', window.form.onUploadEscPress);
   });
 
   commentField.addEventListener('blur', function () {
-    document.addEventListener('keydown', window.preview.onEscPress);
+    document.addEventListener('keydown', window.form.onUploadEscPress);
   });
   window.validity = {
     validateHashTag: validateHashTag,

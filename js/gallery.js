@@ -49,8 +49,8 @@
   };
 
   var updatePictures = function (pictures) {
-    removePictures();
     window.debounce(function () {
+      removePictures();
       renderPhotos(pictures);
     });
   };
